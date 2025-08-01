@@ -26,9 +26,7 @@ public class ChunkAdminCommand {
                     .withOptionalArguments(new PlayerArgument("target"))
                     .executesPlayer((sender, args) -> {
                         Player target = (Player) args.getOrDefault("target", sender);
-                        if (null == target) {
-                            return;
-                        }
+                        if (null == target) { return; }
 
                         Chunk chunk = target.getLocation().getChunk();
                         chunk.getPersistentDataContainer().set(ChunkClaim.CLAIM_KEY, PersistentDataType.STRING, target.getUniqueId().toString());
@@ -89,9 +87,7 @@ public class ChunkAdminCommand {
                     .withOptionalArguments(new PlayerArgument("target"))
                     .executesPlayer((sender, args) -> {
                         Player target = (Player) args.getOrDefault("target", sender);
-                        if (null == target) {
-                            return;
-                        }
+                        if (null == target) { return; }
 
                         getChuckClaimItem(target);
                     })
@@ -111,10 +107,9 @@ public class ChunkAdminCommand {
 
     public static boolean unclaimChunk(Player player, int chunkX, int chunkZ, World world) {
         Chunk chunk = world.getChunkAt(chunkX, chunkZ);
-        NamespacedKey claimKey = new NamespacedKey(ChunkClaim.getInstance(), "claim_owner");
 
-        if (chunk.getPersistentDataContainer().has(claimKey, PersistentDataType.STRING)) {
-            chunk.getPersistentDataContainer().remove(claimKey);
+        if (chunk.getPersistentDataContainer().has(ChunkClaim.CLAIM_KEY, PersistentDataType.STRING)) {
+            chunk.getPersistentDataContainer().remove(ChunkClaim.CLAIM_KEY);
             player.sendMessage(ChunkClaim.SYSTEM_PREFIX.append(Component.text("땅의 점유를 해제하였습니다. (" + chunkX + ", " + chunkZ + ") @" + world.getName(), NamedTextColor.WHITE)));
             return true;
         } else {
