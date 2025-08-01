@@ -42,10 +42,9 @@ public class ChunkClaimListener implements Listener {
         if (!Component.text("땅 문서", NamedTextColor.WHITE).equals(meta.displayName())) { return; }
 
         NamespacedKey key = new NamespacedKey(ChunkClaim.getInstance(), "chunkclaim");
-        if (!meta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) { return; }
+        if (!meta.getPersistentDataContainer().has(key, PersistentDataType.BOOLEAN)) { return; }
 
         Chunk chunk = player.getLocation().getChunk();
-        NamespacedKey claimKey = new NamespacedKey(ChunkClaim.getInstance(), "claim_owner");
 
         if (pendingClaims.containsKey(uuid)) {
             Chunk pendingChunk = pendingClaims.get(uuid);
@@ -54,9 +53,9 @@ public class ChunkClaimListener implements Listener {
                 return;
             }
 
-            if (!chunk.getPersistentDataContainer().has(claimKey, PersistentDataType.STRING)) {
+            if (!chunk.getPersistentDataContainer().has(ChunkClaim.CLAIM_KEY, PersistentDataType.STRING)) {
                 consumeItem(player, 1);
-                chunk.getPersistentDataContainer().set(claimKey, PersistentDataType.STRING, uuid.toString());
+                chunk.getPersistentDataContainer().set(ChunkClaim.CLAIM_KEY, PersistentDataType.STRING, uuid.toString());
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
                 player.sendMessage(ChunkClaim.SYSTEM_PREFIX.append(Component.text("땅을 점유했습니다. (" + chunk.getX() + ", " + chunk.getZ() + ") @" + chunk.getWorld().getName(), NamedTextColor.WHITE)));
             } else {
@@ -74,8 +73,8 @@ public class ChunkClaimListener implements Listener {
             return;
         }
 
-        if (chunk.getPersistentDataContainer().has(claimKey, PersistentDataType.STRING)) {
-            String owner = chunk.getPersistentDataContainer().get(claimKey, PersistentDataType.STRING);
+        if (chunk.getPersistentDataContainer().has(ChunkClaim.CLAIM_KEY, PersistentDataType.STRING)) {
+            String owner = chunk.getPersistentDataContainer().get(ChunkClaim.CLAIM_KEY, PersistentDataType.STRING);
             if (uuid.toString().equals(owner)) {
                 player.sendMessage(ChunkClaim.SYSTEM_PREFIX.append(Component.text("이미 당신이 점유한 땅입니다.", NamedTextColor.WHITE)));
             } else {
